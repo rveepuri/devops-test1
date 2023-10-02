@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="employee_i_9_tree" model="ir.ui.view">
+        <field name="name">employee.i.9.tree</field>
+        <field name="model">employee.i.9</field>
+        <field name="arch" type="xml">
+            <tree string="I9">
+                <field name="employee_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="employee_i_9_form" model="ir.ui.view">
+        <field name="name">employee.i.9.form</field>
+        <field name="model">employee.i.9</field>
+        <field name="arch" type="xml">
+            <form string="I9 Timesheet">
+                 <header>
+                        <button name="submit_to_manager" string="Send To Vefifation" type="object" states="new,reject" class="oe_highlight" data-hotkey="v"/>
+
+                     <button name="action_approved"  groups="timesheet_approval.group_i9_approval"  string="Approved" type="object" states="waiting_approval" class="oe_highlight" data-hotkey="v"/>
+                        <button name="action_reject" groups="timesheet_approval.group_i9_approval" string="Rejected" type="object" states="waiting_approval" class="oe_highlight" data-hotkey="v"/>
+<!--                        <button name="action_timesheet_invoice" string="Create Invoice" type="object" states="approved" class="oe_highlight" data-hotkey="v"/>-->
+                        <field name="state" widget="statusbar" statusbar_visible="new,waiting_approval,approved,reject,invoice"/>
+                    </header>
+                <sheet>
+<!--                     <div class="oe_button_box" name="button_box">-->
+<!--                        <button name="button_open_invoices" type="object" icon="fa-flag-o" class="oe_stat_button"-->
+<!--                            attrs="{'invisible': [('invoice_ref', '=',False)]}">-->
+<!--                            <field name="invoice_ref" string="Invoices" invisible="1"/>-->
+<!--                             <span class="o_stat_text">-->
+<!--                                        Invoices-->
+<!--                                    </span>-->
+<!--                        </button>-->
+<!--                    </div>-->
+
+                    <group>
+                        <group>
+                            <field name="create_date"/>
+                            <field name="employee_id"/>
+                            <field name="timesheet_manager_id"/>
+<!--                            <field name="attachment" string="Attachments" filename="attachment_name"/>-->
+                        </group>
+                        <group>
+                            <field name="completion_date"/>
+                            <field name="user_id"/>
+                            <field name="date_of_joining"/>
+                            <field name="email_id"/>
+                            <field name="id_proff_no"/>
+                            <field name="ref_person"/>
+<!--                             <field name="attachment_ids" widget="many2many_binary"/>-->
+<!--                             <label for="supported_attachment_ids" string="Supporting Document" />-->
+<!--                            <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" />-->
+
+                        </group>
+                    </group>
+                     <notebook>
+                        <page string="Upload Documents" name="Upload_documents">
+                            <group>
+                             <field name="attachment_ids" widget="many2many_binary"/>
+                            </group>
+                        </page>
+                     </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_employee_i_9" model="ir.actions.act_window">
+        <field name="name">I9 Form</field>
+        <field name="res_model">employee.i.9</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new Overhead
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_employee_i_9"
+              name="I9 Form"
+              parent="hr.menu_hr_employee_payroll"
+              sequence="3"
+              action="action_employee_i_9"/>
+</odoo>

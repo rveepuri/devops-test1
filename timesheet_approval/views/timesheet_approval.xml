@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="timesheet_approval_tree" model="ir.ui.view">
+        <field name="name">timesheet.approval.tree</field>
+        <field name="model">timesheet.approval</field>
+        <field name="arch" type="xml">
+            <tree string="Approval Timesheet" decoration-muted="state == 'invoice'" decoration-success="state == 'approved'" decoration-warning="state == 'waiting_approval'">
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="employee_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="timesheet_approval_form" model="ir.ui.view">
+        <field name="name">timesheet.approval.form</field>
+        <field name="model">timesheet.approval</field>
+        <field name="arch" type="xml">
+            <form string="Approval Timesheet">
+                 <header>
+                        <button name="submit_to_manager" string="Submit To Manager" type="object" states="new,reject" class="oe_highlight" data-hotkey="v"/>
+                        <button name="action_approved" groups="timesheet_approval.group_timesheet_approval"  string="Approved" type="object" states="waiting_approval" class="oe_highlight" data-hotkey="v"/>
+                        <button name="action_reject" groups="timesheet_approval.group_timesheet_approval"  string="Rejected" type="object" states="waiting_approval" class="oe_highlight" data-hotkey="v"/>
+                        <button name="action_timesheet_invoice" string="Create Invoice" type="object" states="approved" class="oe_highlight" data-hotkey="v"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new,waiting_approval,approved,reject,invoice"/>
+                    </header>
+                <sheet>
+                     <div class="oe_button_box" name="button_box">
+                        <button name="button_open_invoices" type="object" icon="fa-flag-o" class="oe_stat_button"
+                            attrs="{'invisible': [('invoice_ref', '=',False)]}">
+                            <field name="invoice_ref" string="Invoices" invisible="1"/>
+                             <span class="o_stat_text">
+                                        Invoices
+                                    </span>
+                        </button>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="timesheet_manager_id"/>
+                            <field name="wages"/>
+                            <field name="per_day_amount"/>
+                            <field name="attachment" string="Attachments" filename="attachment_name"/>
+                        </group>
+                        <group>
+                            <field name="to_date"/>
+                            <field name="user_id"/>
+                            <field name="employee_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Approval Timesheet Details" name="timesheet_lines">
+                            <field name="timesheet_lines">
+                                <tree string="Approval Timesheet Details">
+                                    <field name="date"/>
+                                    <field name="project_id"/>
+                                    <field name="task_id"/>
+                                    <field name="spend_time" sum="Spent"/>
+<!--                                    <field name="wages"/>-->
+<!--                                    <field name="per_day_amount"/>-->
+<!--                                    <field name="total_amount"/>-->
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_timesheet_approval" model="ir.actions.act_window">
+        <field name="name">Employee Timesheet Approval</field>
+        <field name="res_model">timesheet.approval</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new Overhead
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_timesheet_approval"
+              name="Employee Timesheet Approval"
+              parent="timesheet_grid.menu_timesheet_grid_validate"
+              sequence="3"
+              action="action_timesheet_approval"/>
+
+<!--   <record id="project_role_tree" model="ir.ui.view">-->
+<!--        <field name="name">project.role.type.tree</field>-->
+<!--        <field name="model">project.role</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <tree string="Role" sample="1" multi_edit="1" editable="bottom">-->
+<!--                <field name="name"/>-->
+<!--                <field name="cost"/>-->
+<!--            </tree>-->
+<!--        </field>-->
+<!--    </record>-->
+
+<!--    <record id="action_project_role" model="ir.actions.act_window">-->
+<!--        <field name="name">Roles</field>-->
+<!--        <field name="res_model">project.role</field>-->
+<!--        <field name="view_mode">tree</field>-->
+<!--    </record>-->
+
+
+<!--    <menuitem action="action_project_role" id="menu_action_project_role" name="Roles"-->
+<!--              parent="hr.menu_human_resources_configuration" sequence="3"/>-->
+
+</odoo>

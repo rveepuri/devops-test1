@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="report_project_task_gantt" model="ir.ui.view">
+        <field name="name">report.project.task.user.view.gantt</field>
+        <field name="model">report.project.task.user</field>
+        <field name="arch" type="xml">
+            <gantt
+                    date_start="create_date"
+                    date_stop="date_end"
+                    default_group_by="employee_id"
+                    default_scale="week"
+                    color="project_id"
+                    scales="day,week,month,year"
+                    precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
+                    thumbnails="{'employee_id': 'image_128'}">
+                <field name="project_id"/>
+                <field name="user_ids"/>
+                <field name="date_assign"/>
+                <field name="date_end"/>
+                <field name="working_days_close"/>
+                <field name="working_days_open"/>
+                <field name="delay_endings_days"/>
+                <field name="task_id"/>
+                <field name="state"/>
+
+
+                <templates>
+                    <div t-name="gantt-popover" class="container-fluid">
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <ul class="pl-1 mb-0">
+                                    <li>
+                                        <strong>Start Date:</strong>
+                                        <t t-esc="userTimezoneStartDate.format('YYYY-MM-DD hh:mm:ss A')"/>
+                                    </li>
+                                    <li>
+                                        <strong>Stop Date:</strong>
+                                        <t t-esc="date_end.format('YYYY-MM-DD hh:mm:ss A')"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </gantt>
+        </field>
+    </record>
+
+
+
+    <record id="employee_overhead_tree" model="ir.ui.view">
+        <field name="name">employee.overhead.tree</field>
+        <field name="model">employee.overhead</field>
+        <field name="arch" type="xml">
+            <tree string="Overhead">
+                <field name="from_date"/>
+                <field name="to_date"/>
+            </tree>
+        </field>
+    </record>
+    <record id="employee_overhead_form" model="ir.ui.view">
+        <field name="name">employee.overhead.form</field>
+        <field name="model">employee.overhead</field>
+        <field name="arch" type="xml">
+            <form string="Segment">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <field name="to_date"/>
+                            <field name="wages"/>
+                             <field name="total_hours"/>
+                            <field name="per_day"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Project Details" name="lines">
+                            <field name="detailed_lines">
+                                <tree string="Statement lines">
+                                    <field name="project_id"/>
+                                    <field name="task_id"/>
+                                    <field name="spend_time" sum="Spend"/>
+                                    <field name="role_amount" sum="Total"/>
+                                    <field name="total_amount" sum="R Total"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_employee_overhead" model="ir.actions.act_window">
+        <field name="name">Employee Overhead</field>
+        <field name="res_model">employee.overhead</field>
+        <field name="view_mode">tree,form,grantt</field>
+        <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new Overhead
+                </p>
+            </field>
+    </record>
+ <menuitem id="menu_employee_overhead"
+              name="Employee Overhead"
+              parent="project.menu_project_report"
+              sequence="3"
+              action="action_employee_overhead"/>
+
+
+</odoo>

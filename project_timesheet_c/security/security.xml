@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+<!--		<record id="view_profit_detail_group" model="res.groups">-->
+<!--			<field name="name">View Profit Detail</field>-->
+<!--		</record>-->
+<!--		-->
+
+        <record model="res.groups" id="group_project_leader">
+            <field name="name">Project Manager</field>
+        </record>
+		<record model="res.groups" id="group_project_manager">
+            <field name="name">Super Admin</field>
+        </record>
+    </data>
+</odoo>

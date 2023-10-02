@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_timesheet_approval,timesheet.approval,model_timesheet_approval,,1,1,1,1
+access_timesheet_approval_lines,timesheet.approval.lines,model_timesheet_approval_lines,,1,1,1,1
+access_project_role,project.role,model_project_role,,1,1,1,1
+access_employee_i_9,employee.i.9,model_employee_i_9,,1,1,1,1

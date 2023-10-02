@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="quick_create_task_form_cs" model="ir.ui.view">
+        <field name="name">project.task.form.quick_create</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.quick_create_task_form"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="project_manager"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_task_form2_inherit_cs" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="before">
+                <field name="users_roles">
+                    <tree editable="bottom">
+                         <field name="user_id"/>
+                        <field name="role"/>
+                        <field name="role_cost"/>
+
+                    </tree>
+                </field>
+            </field>
+
+
+            <field name="user_ids" position="before">
+                <field name="project_leader"/>
+                <field name="project_manager"/>
+                <field name="account_move" readonly="1"/>
+                <field name="approved" invisible="1"/>
+                <field name="to_approval" invisible="1"/>
+            </field>
+             <xpath expr="//button[@name='action_assign_to_me']" position="replace">
+               <button name="action_assign_to_me" string="Assign to Me" type="object" attrs="{'invisible': ['|',('to_approval', '=', False),('approved', '=', True)]}" data-hotkey="q"/>
+
+             </xpath>
+             <xpath expr="//button[@name='action_assign_to_me']" position="after">
+                <button name="action_for_approval" groups="project_timesheet_c.group_project_leader,project_timesheet_c.group_project_manager" string="To Approval" type="object" attrs="{'invisible': [('to_approval', '=', True)]}" data-hotkey="q" class="btn btn-primary"/>
+                <button name="action_approved" groups="project_timesheet_c.group_project_manager" string="Approved" type="object" attrs="{'invisible': ['|',('to_approval', '=', False),('approved', '=', True)]}" data-hotkey="q" class="btn btn-primary"/>
+                <button name="action_rejected" groups="project_timesheet_c.group_project_manager" string="Reject" type="object" attrs="{'invisible': ['|',('to_approval', '=', False),('approved', '=', True)]}" data-hotkey="q" class="btn btn-primary"/>
+                <button id="create_invoice" name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice" attrs="{'invisible':[('approved','!=',True)]}"
+                    type="action" class="btn-primary" data-hotkey="q"
+                    />
+             </xpath>
+        </field>
+    </record>
+
+<!--    project.view_task_form2-->
+
+
+<!--    <record id="hr_timsheet_user_comp_rule" model="ir.rule">-->
+<!--        <field name="name">Employee Project rule</field>-->
+<!--        <field name="model_id" ref="project.model_project_project"/>-->
+<!--        <field name="domain_force">['|','|','|',('message_partner_ids', 'in', [user.partner_id.id]),('task_ids.user_ids', 'in', user.id),('task_ids.project_leader', '=', user.id),('task_ids.project_manager', '=', user.id)]</field>-->
+<!--&lt;!&ndash;        <field name="groups" eval="[(4, ref('project_timesheet_c.group_project_leader')),(4, ref('project.group_project_user')),(4, ref('project_timesheet_c.group_project_manager'))]"/>&ndash;&gt;-->
+
+<!--    </record>-->
+
+
+<!--    <record id="hr_timsheet_user_task_rule" model="ir.rule">-->
+<!--        <field name="name">Employee Project Task </field>-->
+<!--        <field name="model_id" ref="project.model_project_task"/>-->
+<!--        <field name="domain_force">['|','|','|',('message_partner_ids', 'in', [user.partner_id.id]),('project_leader','=',user.id),('project_manager','=',user.id),('user_ids','=',user.id)]</field>-->
+<!--&lt;!&ndash;         <field name="groups" eval="[(4, ref('project_timesheet_c.group_project_leader')),(4, ref('project.group_project_user')),(4, ref('project_timesheet_c.group_project_manager'))]"/>&ndash;&gt;-->
+<!--    </record>-->
+
+
+
+
+
+     <record id="view_task_form2_inherited_celler" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='date']" position="before">
+                   <field name="invoiced_cc" invisible="1"/>
+           </xpath>
+<!--            <xpath expr="//field[@name='timesheet_ids']" position="attrs">-->
+<!--                   decoration-success="state == 'installed'"-->
+<!--           </xpath>-->
+<!--            <field name="timesheet_ids" position="replace">-->
+<!--                           <field name="timesheet_ids" decoration-success="invoiced_cc == True" mode="tree,kanban" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}"/>-->
+
+<!--                </field>-->
+             <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
+                <attribute name="decoration-success">invoiced_cc == True</attribute>
+            </xpath>
+
+
+        </field>
+     </record>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_template_timesheet_approval" model="mail.template">
+            <field name="name">Timesheet Approval</field>
+            <field name="model_id" ref="model_project_task"/>
+            <field name="subject">Email For Timesheet Approval</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="name">Sent Timesheet Approval</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear
+
+                    <t t-if="object.project_manager">
+                        <t t-out="object.project_manager.name or ''"></t>,
+                    </t>
+                    <t t-else="">
+                        <t t-out="object.project_leader.name or ''"></t>,
+                    </t>
+                    </p>
+                    <br/>
+                    <br/>
+                    Here is Approval Timesheet
+                    <t t-if="object.name">
+                        TimeSheet :
+                        <span style="font-weight:bold;" t-out="object.name or ''"></span>
+                    </t>
+                    <t t-else="">
+                        TimeSheet
+                    </t>
+                    <t t-if="object.project_id">
+                        (with reference: <t t-out="object.project_id.name or ''"></t>)
+                    </t>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
