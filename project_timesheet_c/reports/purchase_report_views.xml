@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    <record id="employee_purchase_report_cohort" model="ir.ui.view">-->
+<!--        <field name="name">employee.purchase.report.cohort</field>-->
+<!--        <field name="model">employee.purchase.report</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <cohort string="Employee A" date_start="date" date_stop="date" interval="week" mode="churn" sample="1">-->
+<!--                <field name="employee_id"/>-->
+<!--                <field name="loss_amount"/>-->
+<!--                <field name="total_amount"/>-->
+<!--            </cohort>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="employee_purchase_report_gantt" model="ir.ui.view">
+        <field name="name">memployee.purchase.report.gantt</field>
+        <field name="model">employee.purchase.report</field>
+        <field name="arch" type="xml">
+            <gantt
+                    date_start="date"
+                    date_stop="date"
+                    default_group_by="employee_id"
+                    default_scale="week"
+                    color="employee_id"
+                    decoration-danger="loss_amount > 0"
+                    scales="day,week,month,year"
+                    precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
+                    thumbnails="{'employee_id': 'image_128'}">
+                <field name="employee_id"/>
+                <templates>
+                    <div t-name="gantt-popover" class="container-fluid">
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <ul class="pl-1 mb-0">
+                                    <li>
+                                        <strong>Start Date:</strong>
+                                        <t t-esc="userTimezoneStartDate.format('YYYY-MM-DD hh:mm:ss A')"/>
+                                    </li>
+                                    <li>
+                                        <strong>Stop Date:</strong>
+                                        <t t-esc="date.format('YYYY-MM-DD hh:mm:ss A')"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="wages"/>
+<!--                <field name="total_hours"/>-->
+                <field name="role_cost"/>
+                <field name="total_amount"/>
+                <field name="loss_amount"/>
+
+            </gantt>
+        </field>
+    </record>
+
+
+    <record id="employee_purchase_report_pivot_employee" model="ir.ui.view">
+        <field name="name">employee.purchase.report.pivot</field>
+        <field name="model">employee.purchase.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Employee Analysis" sample="1" disable_linking="True">
+                <field name="employee_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <!--                    <field name="amount" string="Timesheet Costs"/>-->
+                <field name="wages" string="Wages" type="measure"/>
+                <field name="role_cost" string="Role Costs" type="measure"/>
+                <field name="loss_amount"/>
+                <field name="unit_amount" type="measure" widget="timesheet_uom" string="Hours Spent"/>
+                <field name="total_amount" string="Total Amt"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="employee_purchase_report_graph_employee" model="ir.ui.view">
+        <field name="name">employee.purchase.report.graph</field>
+        <field name="model">employee.purchase.report</field>
+        <field name="arch" type="xml">
+            <graph string="Employee Analysis" sample="1" js_class="hr_timesheet_graphview" disable_linking="True">
+                <field name="employee_id" type="row"/>
+                <field name="role" string="Role"/>
+                <field name="wages" string="Wages"/>
+                <field name="role_cost" string="Role Costs"/>
+                <field name="loss_amount"/>
+                <field name="total_amount" string="Total Amt"/>
+                <!--                    <field name="unit_amount" string="Hours Spent" type="measure" widget="timesheet_uom"/>-->
+            </graph>
+        </field>
+    </record>
+
+    <record id="employee_hr_timesheet_report_search" model="ir.ui.view">
+        <field name="name">employee.purchase.report.search</field>
+        <field name="model">employee.purchase.report</field>
+        <field name="arch" type="xml">
+            <search string="Employee">
+                <field name="employee_id"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="name"/>
+                <separator/>
+                <filter name="month" string="Date" date="date"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
+                    <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
+                    <filter string="Employee" name="groupby_employee" domain="[]"
+                            context="{'group_by': 'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_purchase_order_report_all_employee" model="ir.actions.act_window">
+        <field name="name">Employee Analysis</field>
+        <field name="res_model">employee.purchase.report</field>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="employee_hr_timesheet_report_search"/>
+        <field name="view_mode">pivot,graph,gantt</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p>
+            <p>
+                Analyze the projects and tasks on which your employees spend their time.
+                <br/>
+                Evaluate which part is billable and what costs it represents.
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="employee_purchase_report" name="Employee Analysis" sequence="4" parent="project.menu_project_report"
+              action="action_purchase_order_report_all_employee"/>
+
+</odoo>
