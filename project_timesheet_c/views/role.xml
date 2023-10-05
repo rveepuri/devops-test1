@@ -77,7 +77,43 @@
             </xpath>
         </field>
     </record>
+    <record id="view_sale_order_celler" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.account</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="string">Project</attribute>
+            </xpath>
+            <!--            <xpath expr="//field[@name='order_line']/tree/field[@name='product_tmpl_id']" position="attributes">-->
+            <!--                <attribute name="string">Project</attribute>-->
+            <!--            </xpath>-->
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="attributes">
+                <attribute name="string">Employee</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
 
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="attributes">
+                <attribute name="string">Hours</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+                <attribute name="string">Bill Rate/Hr</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_view_form_product" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.sale.product.configurator</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
+                <attribute name="string">Project</attribute>
+            </xpath>
+        </field>
+    </record>
 
     <!--########################################-->
 
@@ -145,5 +181,69 @@
             </p>
         </field>
     </record>
+
+
+    <!--    project.view_task_kanban-->
+
+    <record id="view_task_kanban_inherited_celler" model="ir.ui.view">
+        <field name="name">project.task.timesheet.kanban.inherited.progress</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <templates position="before">
+                <field name="invoice_ticket_ids" invisible="1"/>
+            </templates>
+            <div class="o_kanban_record_headings" position="after">
+                <a class="o_project_kanban_box" name="action_view_invoices" type="object">
+
+                    <t t-set="badge" t-value=""/>
+                    <t t-set="badge" t-value="'border-danger'" t-if="record.invoice_ticket_ids.raw_value &lt; 0"/>
+                    <t t-set="title" t-value="'Invoices'" t-else=""/>
+                    <div t-attf-class="oe_kanban_align badge {{ badge }}" t-att-title="title">
+                        <br/>
+                        <field name="invoice_ticket_ids"/>
+                        Invoices
+                    </div>
+                </a>
+            </div>
+        </field>
+    </record>
+
+
+    <record id="view_project_kanban_inherited_celler" model="ir.ui.view">
+        <field name="name">project.project.timesheet.kanban.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <templates position="before">
+                <field name="invoice_ids"/>
+            </templates>
+            <div class="o_kanban_primary_left" position="inside">
+                <a class="o_project_kanban_box" name="action_view_invoices" type="object">
+                    <t t-set="badge" t-value=""/>
+                    <t t-set="badge" t-value="'border-danger'" t-if="record.invoice_ids.raw_value &lt; 0"/>
+                    <t t-set="title" t-value="'Invoices'" t-else=""/>
+                    <div t-attf-class="oe_kanban_align badge {{ badge }}" t-att-title="title"
+                         style="color:green;font-weight:bold;">
+                        <field name="invoice_ids"/>
+                        Invoices
+                    </div>
+                </a>
+            </div>
+        </field>
+    </record>
+    <record id="payment_inv_timesheet_view_formcc" model="ir.ui.view">
+        <field name="name">sale_timesheet.sale.advance.payment.inv.view.form</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale_timesheet.sale_advance_payment_inv_timesheet_view_form"/>
+        <field name="arch" type="xml">
+            <group name="down_payment_specification" position="after">
+                <group>
+                <field name="date_custom"/>
+                    </group>
+            </group>
+        </field>
+    </record>
+
 
 </odoo>

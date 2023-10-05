@@ -1,54 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <record id="report_project_task_gantt" model="ir.ui.view">
-        <field name="name">report.project.task.user.view.gantt</field>
-        <field name="model">report.project.task.user</field>
-        <field name="arch" type="xml">
-            <gantt
-                    date_start="create_date"
-                    date_stop="date_end"
-                    default_group_by="employee_id"
-                    default_scale="week"
-                    color="project_id"
-                    scales="day,week,month,year"
-                    precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
-                    thumbnails="{'employee_id': 'image_128'}">
-                <field name="project_id"/>
-                <field name="user_ids"/>
-                <field name="date_assign"/>
-                <field name="date_end"/>
-                <field name="working_days_close"/>
-                <field name="working_days_open"/>
-                <field name="delay_endings_days"/>
-                <field name="task_id"/>
-                <field name="state"/>
-
-
-                <templates>
-                    <div t-name="gantt-popover" class="container-fluid">
-                        <div class="row no-gutters">
-                            <div class="col">
-                                <ul class="pl-1 mb-0">
-                                    <li>
-                                        <strong>Start Date:</strong>
-                                        <t t-esc="userTimezoneStartDate.format('YYYY-MM-DD hh:mm:ss A')"/>
-                                    </li>
-                                    <li>
-                                        <strong>Stop Date:</strong>
-                                        <t t-esc="date_end.format('YYYY-MM-DD hh:mm:ss A')"/>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </templates>
-            </gantt>
-        </field>
-    </record>
-
-
-
     <record id="employee_overhead_tree" model="ir.ui.view">
         <field name="name">employee.overhead.tree</field>
         <field name="model">employee.overhead</field>
@@ -69,6 +21,7 @@
                         <group>
                             <field name="from_date"/>
                             <field name="employee_id"/>
+                            <field name="employee_multiple_ids" widget="many2many_tags"/>
                         </group>
                         <group>
                             <field name="to_date"/>
@@ -94,10 +47,41 @@
             </form>
         </field>
     </record>
+    <record id="project_gantt_production" model="ir.ui.view">
+        <field name="name">employee.overhead.gantt.production</field>
+        <field name="model">employee.overhead</field>
+        <field name="arch" type="xml">
+            <gantt class="o_mrp_workorder_gantt" date_stop="to_date" date_start="from_date" string="Employee" default_group_by="employee_id" create="0" delete="0"
+                 plan="0"
+                color="employee_multiple_ids"
+                display_unavailability="1"
+                sample="1"
+                form_view_id="%(employee_overhead_form)d">
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="employee_multiple_ids"/>
+                <templates>
+                    <div t-name="gantt-popover" class="container-fluid">
+                        <div class="row g-0">
+                            <div class="col">
+                                <ul class="ps-1 mb-0 list-unstyled">
+                                    <li><strong>Start Date: </strong> <t t-out="userTimezoneStartDate.format('L LTS')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-out="userTimezoneStopDate.format('L LTS')"/></li>
+                                    <li><strong>Employee: </strong> <t t-out="employee_multiple_ids"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </gantt>
+        </field>
+    </record>
+
     <record id="action_employee_overhead" model="ir.actions.act_window">
         <field name="name">Employee Overhead</field>
         <field name="res_model">employee.overhead</field>
-        <field name="view_mode">tree,form,grantt</field>
+<!--        <field name="view_mode">tree,from,gantt,pivot,graph,calendar</field>-->
+        <field name="view_mode">tree,form,gantt</field>
         <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Add a new Overhead
@@ -109,6 +93,4 @@
               parent="project.menu_project_report"
               sequence="3"
               action="action_employee_overhead"/>
-
-
 </odoo>
