@@ -3,3 +3,4 @@ access_project_role,project.role,model_project_role,,1,1,1,1
 access_role_users,role.users,model_role_users,,1,1,1,1
 access_employee_overhead,employee.overhead,model_employee_overhead,,1,1,1,1
 access_employee_overhead_lines,employee.overhead.lines,model_employee_overhead_lines,,1,1,1,1
+access_employee_purchases_report,employees.purchase.report,model_employee_purchase_report,,1,1,1,1

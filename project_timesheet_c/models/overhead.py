@@ -15,6 +15,7 @@ class ProjectEmployeeOverhead(models.Model):
     _name = "employee.overhead"
 
     employee_id = fields.Many2one('hr.employee',string="Employee")
+    employee_multiple_ids = fields.Many2many('hr.employee','employees',string="Employee")
     detailed_lines = fields.One2many('employee.overhead.lines','over_id',string="Detailed")
     from_date = fields.Date(string="From Date")
     to_date = fields.Date(string="To Date")
