@@ -54,7 +54,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def create_invoices(self):
         rec = super(SaleAdvancePaymentInv, self).create_invoices()
-        invoice_id = self.env['account.move'].search([('id', '=', rec['res_id'])])
+        invoice_id = False
+        if rec.get('res_id'):
+            invoice_id = self.env['account.move'].search([('id', '=', rec['res_id'])])
         if not invoice_id:
             invoice_id = self.env['account.move'].browse(rec['domain'][0][2][-1])
         if invoice_id:
