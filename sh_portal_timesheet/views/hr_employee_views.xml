@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee Inherit View-->
+    <record id="sh_timesheet_portal_view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="domain">[]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='resource_calendar_id']" position="before">
+                <field name="resource_id" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
